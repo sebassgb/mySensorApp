@@ -1,0 +1,22 @@
+body{
+  background-color: #fdcf58;
+}
+
+body.shaking{
+  background-color: #800909;
+}
+
+div.lecture{
+      display:block;
+      background-color: #f27d0c;
+      color: #800909;
+      border: one;
+      width: 50%auto;
+      padding: 30px;
+      font-size: 3em;
+      margin-top: 10px;
+      margin-left: auto; /*Queda centrado dentro de la pantalla del dispositivo*/
+      margin-right: auto; /*Queda centrado dentro de la pantalla del dispositivo*/
+      text-align: center;
+      text-transform: uppercase;
+}
