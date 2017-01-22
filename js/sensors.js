@@ -17,7 +17,7 @@ var app={
 
       function preload() {
         game.physics.startSystem(Phaser.Physics.ARCADE);//Arrancamos el motor de física
-        game.stage.backgroundColor = '#f27d8c';
+        game.stage.backgroundColor = '#f15d8c';
         game.load.image('ball', 'assets/ball.png');
         game.load.image('aim', 'assets/aim.png');//Cargamos imagen que genera puntos
       }
@@ -66,14 +66,14 @@ var app={
       },
 
       initX: function(){//Cada vez se carga es situaciones diferentes
-      return app.numRandomTil(width - DIAMETER_BALL);
+      return app.numRandomTill(width - DIAMETER_BALL);
     },
 
       initY: function(){//Cada vez se carga es situaciones diferentes
-        return app.numRandomTil(height - DIAMETER_BALL);
+        return app.numRandomTill(height - DIAMETER_BALL);
       },
 
-      numRandomTil: function(boundary){
+      numRandomTill: function(boundary){
         return Math.floor(Math.random() * boundary);
       },
 
@@ -88,7 +88,7 @@ var app={
     //app.representValues(dateAcceleration); Primera fase
     app.regDirection(dateAcceleration);
   }
-    navigator.accelerometer.watchAcceleration(onSuccess, onError,{ frequency: 10 });//0.01 seg
+    navigator.accelerometer.watchAcceleration(this.onSuccess, onError,{ frequency: 10 });//0.01 seg
   },
 
     detectShaking: function(dateAcceleration){
