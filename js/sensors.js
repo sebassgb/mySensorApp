@@ -17,7 +17,7 @@ var app={
 
       function preload() {
         game.physics.startSystem(Phaser.Physics.ARCADE);//Arrancamos el motor de física
-        game.stage.backgroundColor = '#f15d8c';
+        game.stage.backgroundColor = '#f27d8c';
         game.load.image('ball', 'assets/ball.png');
         game.load.image('aim', 'assets/aim.png');//Cargamos imagen que genera puntos
       }
@@ -42,8 +42,8 @@ var app={
         ball.body.velocity.x = (velocityX * (-1 * dificultyFactor));//Invertir Movilidad en el eje x
 
         game.physics.arcade.overlap(ball, aim, app.addScore, null, this);
-      }//Overlap nos detecta que la BOLA pasa SOBRE(se cruzan) el OBJETIVO, y lanze el callback addScore
-//En "null" iría cuando queremos ponerle otra condición, y el THIS es en el entorno que se envía
+      }
+      
       var states = { preload: preload, create: create, update: update };
       var game = new Phaser.Game(width, height, Phaser.CANVAS, 'phaser', states);//Creamos un nuevo Game de Phaser
 },
@@ -51,7 +51,7 @@ var app={
       reduceScore: function(){
         score = score-1;
         scoreText.text = score;//Dibuja en el fondo del espacio la puntuación
-      }
+      },
 
       addScore: function(){
         score = score+1;
@@ -66,14 +66,14 @@ var app={
       },
 
       initX: function(){//Cada vez se carga es situaciones diferentes
-      return app.numRandomTill(width - DIAMETER_BALL);
+      return app.numRandomTil(width - DIAMETER_BALL);
     },
 
       initY: function(){//Cada vez se carga es situaciones diferentes
-        return app.numRandomTill(height - DIAMETER_BALL);
+        return app.numRandomTil(height - DIAMETER_BALL);
       },
 
-      numRandomTill: function(boundary){
+      numRandomTil: function(boundary){
         return Math.floor(Math.random() * boundary);
       },
 
@@ -82,12 +82,13 @@ var app={
       function onError() {
         console.log('onError');
       }
-/*Por intervalos leemos datos de acceleración, si hay éxito llamamos onSuccess, con frecuencia en milisegundos*/
+    },
+
   onSuccess: function(dateAcceleration){
     app.detectShaking(dateAcceleration);//Detecta agitación después de analizar datos
-    //app.representValues(dateAcceleration); Primera fase
+
     app.regDirection(dateAcceleration);
-  }
+
     navigator.accelerometer.watchAcceleration(this.onSuccess, onError,{ frequency: 10 });//0.01 seg
   },
 
@@ -109,20 +110,11 @@ var app={
       velocityX = dateAcceleration.x ;
 
     }
-/*Primera fase aplicación
-  representValues: function(dateAcceleration){
-    app.represent(dateAcceleration.x, '#valuex');
-    app.represent(dateAcceleration.y, '#valuey');
-    app.represent(dateAcceleration.z, '#valuez');
-  },
-  represent: function(dates, elementHTML){
-    var rounded = Math.round(dates * 100) / 100;
-    document.querySelector(elementHTML).innerHTML = rounded;
-  }/*El innerHTML del SPAN agregado le introducimos el valor*/
+
 };
 
 if ('addEventListener' in document) {
     document.addEventListener('deviceready', function() {
         app.init();/*deviceready nos dice que ya esta disponible el accelerometro*/
-    }, false);/*'DOMContentLoaded'*/
+    }, false);
 }
