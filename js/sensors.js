@@ -1,4 +1,5 @@
 var app={
+
   init: function(){
         DIAMETER_BALL=50;
         dificulty=0;
@@ -6,8 +7,8 @@ var app={
         velocityY=0;
         score=0;
 
-        height = document.documentElement.clientHeight;
-        width =  document.documentElement.clientWidth;
+        height = document.documentElement.clientHeight;//Obtenemos altura del dispositivo.
+        width =  document.documentElement.clientWidth;//Obtenemos ancho del dispositivo.
 
         app.guardSensors();
         app.initGame();
@@ -17,6 +18,7 @@ var app={
 
       function preload() {
         game.physics.startSystem(Phaser.Physics.ARCADE);//Arrancamos el motor de física
+
         game.stage.backgroundColor = '#f27d8c';
         game.load.image('ball', 'assets/ball.png');
         game.load.image('aim', 'assets/aim.png');//Cargamos imagen que genera puntos
@@ -24,16 +26,16 @@ var app={
 
       function create() {//Funciones enviadas como parametros deben contener los parentesis
         scoreText = game.add.text(16,16, score, { fontSize: '100px', fill: '#757676'});
-
+//Posicion (x,y), y letras para la puntuación
         aim = game.add.sprite(app.initX(), app.initY(), 'aim');//Usamos el algoritmo para poner la bola(DEBE TENER MISMO TAMAÑO)
-        ball = game.add.sprite(app.initX(), app.initY(), 'ball');
-
+        ball = game.add.sprite(app.initX(), app.initY(), 'ball');//Leyes de física de RCADE
+//último en dibujarse se sobrepone en el otro
         game.physics.arcade.enable(ball);//en el motor de física arcade ponga la bola(sobre el sprite bola actúe las leyes físicas de arcade)
         game.physics.arcade.enable(aim);//Generador de puntos
 
         ball.body.collideWorldBounds = true;//Cuerpo de la bola detecta colisión
         ball.body.onWorldBounds = new Phaser.Signal();//Cada vez que suceda genera señal(permite poner el manejador de la señal)
-        ball.body.onWorldBounds.add(app.reduceScore, this);
+        ball.body.onWorldBounds.add(app.reduceScore, this);//Manejador de la señal
       }//Añadimos un sprite
 
       function update(){
@@ -42,8 +44,8 @@ var app={
         ball.body.velocity.x = (velocityX * (-1 * dificultyFactor));//Invertir Movilidad en el eje x
 
         game.physics.arcade.overlap(ball, aim, app.addScore, null, this);
-      }
-      
+      }//Overlap nos detecta que la BOLA pasa SOBRE(se cruzan) el OBJETIVO, y lanze el callback addScore
+//En "null" iría cuando queremos ponerle otra condición, y el THIS es en el entorno que se envía
       var states = { preload: preload, create: create, update: update };
       var game = new Phaser.Game(width, height, Phaser.CANVAS, 'phaser', states);//Creamos un nuevo Game de Phaser
 },
@@ -62,12 +64,12 @@ var app={
 
         if(score > 0){
           dificulty = dificulty + 1;
-        }
+         }
       },
 
       initX: function(){//Cada vez se carga es situaciones diferentes
-      return app.numRandomTil(width - DIAMETER_BALL);
-    },
+      return app.numRandomTil(width - DIAMETER_BALL);//Para que no se corte la bola
+      },
 
       initY: function(){//Cada vez se carga es situaciones diferentes
         return app.numRandomTil(height - DIAMETER_BALL);
@@ -82,15 +84,14 @@ var app={
       function onError() {
         console.log('onError');
       }
-    },
-
-  onSuccess: function(dateAcceleration){
-    app.detectShaking(dateAcceleration);//Detecta agitación después de analizar datos
-
-    app.regDirection(dateAcceleration);
-
-    navigator.accelerometer.watchAcceleration(this.onSuccess, onError,{ frequency: 10 });//0.01 seg
-  },
+/*Por intervalos leemos datos de acceleración, si hay éxito llamamos onSuccess, con frecuencia en milisegundos*/
+      function onSuccess(dateAcceleration){
+        //app.representValues(dateAcceleration); Primera fase
+        app.detectShaking(dateAcceleration);//Detecta agitación después de analizar datos
+        app.regDirection(dateAcceleration);//Guarda en dos variables estado del acelerómetro
+  }
+    navigator.accelerometer.watchAcceleration(onSuccess, onError,{ frequency: 10 });//0.01 seg
+},
 
     detectShaking: function(dateAcceleration){
       shakingX = Math.abs(dateAcceleration.x) > 10;
@@ -98,17 +99,21 @@ var app={
 
       if (shakingX || shakingY) {
         setTimeout(app.restart, 1000);//Dentro de éste tiempo recomienza
-      }
+      }//Función JAVA
     },
 
     restart: function(){
-      document.location.reload(true);//Como es una página web podemos hacer recarga de página
+      //document.location.reload(true);//Como es una página web podemos hacer recarga de página
+      dificulty= 0;
+      velocityX = 0;
+      velocityY = 0;
+      score = 0;
+      scoreText.text = score;
     },
 
     regDirection: function(dateAcceleration){
-      velocityY = dateAcceleration.y ;
-      velocityX = dateAcceleration.x ;
-
+      velocityX = dateAcceleration.x;
+      velocityY = dateAcceleration.y;
     }
 
 };
