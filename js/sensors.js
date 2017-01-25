@@ -1,6 +1,6 @@
 var app={
 
-  init: function(){
+  init: function() {
         DIAMETER_BALL=50;
         dificulty=0;
         velocityX=0;
@@ -14,12 +14,12 @@ var app={
         app.initGame();
       },
 
-    initGame: function(){
+    initGame: function() {
 
       function preload() {
         game.physics.startSystem(Phaser.Physics.ARCADE);//Arrancamos el motor de física
 
-        game.stage.backgroundColor = '#f27d8c';
+        game.stage.backgroundColor = '#f27d0c';
         game.load.image('ball', 'assets/ball.png');
         game.load.image('aim', 'assets/aim.png');//Cargamos imagen que genera puntos
       }
@@ -38,7 +38,7 @@ var app={
         ball.body.onWorldBounds.add(app.reduceScore, this);//Manejador de la señal
       }//Añadimos un sprite
 
-      function update(){
+      function update() {
         var dificultyFactor = (300 + (dificulty * 100));//Aumenta velocidad
         ball.body.velocity.y = (velocityY * dificultyFactor);//Mapeo 300 hace interesante el juego
         ball.body.velocity.x = (velocityX * (-1 * dificultyFactor));//Invertir Movilidad en el eje x
@@ -50,12 +50,12 @@ var app={
       var game = new Phaser.Game(width, height, Phaser.CANVAS, 'phaser', states);//Creamos un nuevo Game de Phaser
 },
 
-      reduceScore: function(){
+      reduceScore: function() {
         score = score-1;
         scoreText.text = score;//Dibuja en el fondo del espacio la puntuación
       },
 
-      addScore: function(){
+      addScore: function() {
         score = score+1;
         scoreText.text = score;//Dibuja en el fondo del espacio la puntuación
 
@@ -67,22 +67,22 @@ var app={
          }
       },
 
-      initX: function(){//Cada vez se carga es situaciones diferentes
+      initX: function() {//Cada vez se carga es situaciones diferentes
       return app.numRandomTil(width - DIAMETER_BALL);//Para que no se corte la bola
       },
 
-      initY: function(){//Cada vez se carga es situaciones diferentes
+      initY: function() {//Cada vez se carga es situaciones diferentes
         return app.numRandomTil(height - DIAMETER_BALL);
       },
 
-      numRandomTil: function(boundary){
+      numRandomTil: function(boundary) {
         return Math.floor(Math.random() * boundary);
       },
 
-    guardSensors: function(){
+    guardSensors: function() {
 
       function onError() {
-        console.log('onError');
+        console.log('onError!');
       }
 /*Por intervalos leemos datos de acceleración, si hay éxito llamamos onSuccess, con frecuencia en milisegundos*/
       function onSuccess(dateAcceleration){
@@ -90,10 +90,10 @@ var app={
         app.detectShaking(dateAcceleration);//Detecta agitación después de analizar datos
         app.regDirection(dateAcceleration);//Guarda en dos variables estado del acelerómetro
   }
-    navigator.accelerometer.watchAcceleration(onSuccess, onError,{ frequency: 10 });//0.01 seg
+    navigator.accelerometer.watchAcceleration(onSuccess, onError, { frequency: 10 });//0.01 seg
 },
 
-    detectShaking: function(dateAcceleration){
+    detectShaking: function(dateAcceleration) {
       shakingX = Math.abs(dateAcceleration.x) > 10;
       shakingY = Math.abs(dateAcceleration.y) > 10;
 
@@ -102,7 +102,7 @@ var app={
       }//Función JAVA
     },
 
-    restart: function(){
+    restart: function() {
       //document.location.reload(true);//Como es una página web podemos hacer recarga de página
       dificulty= 0;
       velocityX = 0;
@@ -112,11 +112,11 @@ var app={
     },
 
     regDirection: function(dateAcceleration){
-      velocityX = dateAcceleration.x;
-      velocityY = dateAcceleration.y;
-    }
+      velocityX = dateAcceleration.x ;
+      velocityY = dateAcceleration.y ;
 
-};
+    }
+  };
 
 if ('addEventListener' in document) {
     document.addEventListener('deviceready', function() {
